@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# venv
+.venv/
+venv/
+env/
+
+# uv
+.python-version
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# browser-use runtime artefacts
+agent_history.json
+*.gif
+recordings/
+screenshots/
+logs/
+.browser_use/
+~/.config/browseruse/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
