@@ -80,6 +80,11 @@ Một vài provider phổ biến:
 Mọi provider OpenAI-compatible đều dùng được — chỉ cần endpoint expose
 `/v1/chat/completions`.
 
+> **Mẹo:** một số gateway / proxy chặn User-Agent mặc định của OpenAI SDK
+> (`OpenAI/Python x.y.z`) và trả về 403 *"Your request was blocked"*. Nếu
+> gặp, set `LLM_USER_AGENT=auto-browser-agent/0.1` (hoặc bất cứ chuỗi nào)
+> trong `.env`. Code đã set sẵn 1 UA trung tính nên thường không cần làm gì.
+
 ## Mẹo viết task
 
 - Càng cụ thể càng tốt: nêu URL khởi đầu nếu có, nêu rõ output cần lấy.
