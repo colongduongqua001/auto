@@ -29,6 +29,9 @@ logs/
 .browser_use/
 ~/.config/browseruse/
 
+# Persistent browser profiles + scraped/created accounts (local only, never commit)
+.local/
+
 # IDE
 .vscode/
 .idea/

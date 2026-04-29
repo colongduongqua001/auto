@@ -50,7 +50,17 @@ def _load_env() -> tuple[str, str, str]:
 
 def _build_llm() -> ChatOpenAI:
     base_url, api_key, model = _load_env()
-    return ChatOpenAI(model=model, api_key=api_key, base_url=base_url)
+    # Một số gateway / proxy chặn User-Agent mặc định của OpenAI SDK
+    # ("OpenAI/Python ...") và các header `x-stainless-*` đi kèm. Cho phép
+    # override qua biến môi trường, mặc định dùng 1 UA trung tính.
+    user_agent = os.getenv("LLM_USER_AGENT", "auto-browser-agent/0.1")
+    default_headers = {"User-Agent": user_agent}
+    return ChatOpenAI(
+        model=model,
+        api_key=api_key,
+        base_url=base_url,
+        default_headers=default_headers,
+    )
 
 
 def _build_browser(headless: bool) -> BrowserSession:

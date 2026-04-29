@@ -80,6 +80,11 @@ Một vài provider phổ biến:
 Mọi provider OpenAI-compatible đều dùng được — chỉ cần endpoint expose
 `/v1/chat/completions`.
 
+> **Mẹo:** một số gateway / proxy chặn User-Agent mặc định của OpenAI SDK
+> (`OpenAI/Python x.y.z`) và trả về 403 *"Your request was blocked"*. Nếu
+> gặp, set `LLM_USER_AGENT=auto-browser-agent/0.1` (hoặc bất cứ chuỗi nào)
+> trong `.env`. Code đã set sẵn 1 UA trung tính nên thường không cần làm gì.
+
 ## Mẹo viết task
 
 - Càng cụ thể càng tốt: nêu URL khởi đầu nếu có, nêu rõ output cần lấy.
@@ -102,14 +107,37 @@ phải quảng cáo, đọc nhiệt độ hiện tại và độ ẩm, trả v�
 
 ```
 auto/
-├── main.py         # Entry point — CLI + REPL
-├── pyproject.toml  # uv project (browser-use, python-dotenv)
+├── main.py         # Generic CLI + REPL
+├── tempmail.py     # Client mail.tm (inbox tạm, không cần API key)
+├── leonardo.py     # Task: tự đăng ký + login Leonardo.ai
+├── run-demo.sh     # Smoke test: HN top-3
+├── pyproject.toml  # uv project
 ├── .env.example    # Mẫu config LLM
 └── README.md
 ```
 
-Chỉ 1 file Python ~110 dòng. Toàn bộ phần khó (parse DOM, vision, planning,
-function-calling) là `browser-use` lo.
+Phần khó (parse DOM, vision, planning, function-calling) là `browser-use` lo.
+
+## Predefined task: Leonardo.ai auto-signup
+
+```bash
+uv run python leonardo.py signup
+```
+
+Flow:
+1. Tạo email tạm trên mail.tm (free, không cần signup).
+2. Sinh password random mạnh.
+3. AI mở leonardo.ai, đăng ký, click verify link từ inbox tạm.
+4. Lưu cred vào `.local/leonardo-accounts.jsonl` (gitignored).
+5. Dump info account (plan, credits, ...) ra stdout.
+
+> **Cảnh báo:** Leonardo có thể có Cloudflare Turnstile / SMS verify — không
+> phải lúc nào cũng qua được. Nếu gặp captcha agent sẽ stuck; bạn có thể
+> chạy `--no-headless` (mặc định) để tự click captcha — cookies persist nhờ
+> `user_data_dir`, lần sau không cần login lại.
+
+> **ToS:** automated signup có thể vi phạm Terms of Service của Leonardo.
+> Dùng cho mục đích demo / throwaway thôi.
 
 ## Tham khảo
 
